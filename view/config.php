@@ -13,7 +13,7 @@
                     $dataField = $opt_val_consorcio['taxa_juros'];
                 ?>
                 <tr>
-                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Taxa de Juros (a.a):", 'compare-consorcio' ); ?></label></th>
+                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Taxa de Juros (ao mês):", 'compare-consorcio' ); ?></label></th>
                     <td><input name="<?php echo $fieldName; ?>" type="text" id="<?php echo $fieldName; ?>" value="<?php echo $dataField; ?>" class="regular-text" ></td>
                 </tr>
 
@@ -22,7 +22,7 @@
                     $dataField = $opt_val_consorcio['taxa_administracao'];
                 ?>
                 <tr>
-                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Taxa de Administração (a.a):", 'compare-consorcio' ); ?></label></th>
+                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Taxa de Administração (ao mês):", 'compare-consorcio' ); ?></label></th>
                     <td><input name="<?php echo $fieldName; ?>" type="text" id="<?php echo $fieldName; ?>" value="<?php echo $dataField; ?>" class="regular-text" ></td>
                 </tr>
 
@@ -31,7 +31,7 @@
                     $dataField = $opt_val_consorcio['fundo_reserva'];
                 ?>
                 <tr>
-                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Fundo de reserva (a.a):", 'compare-consorcio' ); ?></label></th>
+                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Fundo de reserva (ao mês):", 'compare-consorcio' ); ?></label></th>
                     <td><input name="<?php echo $fieldName; ?>" type="text" id="<?php echo $fieldName; ?>" value="<?php echo $dataField; ?>" class="regular-text" ></td>
                 </tr>
             </tbody>
@@ -46,7 +46,7 @@
                     $dataField = $opt_val_financiamento['taxa_juros'];
                 ?>
                 <tr>
-                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Taxa de Juros (a.a):", 'compare-consorcio' ); ?></label></th>
+                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Taxa de Juros (ao mês):", 'compare-consorcio' ); ?></label></th>
                     <td><input name="<?php echo $fieldName; ?>" type="text" id="<?php echo $fieldName; ?>" value="<?php echo $dataField; ?>" class="regular-text" ></td>
                 </tr>
 
@@ -55,7 +55,7 @@
                     $dataField = $opt_val_financiamento['taxa_administracao'];
                 ?>
                 <tr>
-                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Taxa de Administração (a.a):", 'compare-consorcio' ); ?></label></th>
+                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Taxa de Administração (ao mês):", 'compare-consorcio' ); ?></label></th>
                     <td><input name="<?php echo $fieldName; ?>" type="text" id="<?php echo $fieldName; ?>" value="<?php echo $dataField; ?>" class="regular-text" ></td>
                 </tr>
 
@@ -64,7 +64,7 @@
                     $dataField = $opt_val_financiamento['fundo_reserva'];
                 ?>
                 <tr>
-                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Fundo de reserva (a.a):", 'compare-consorcio' ); ?></label></th>
+                    <th scope="row"><label for="<?php echo $fieldName; ?>"><?php _e("Fundo de reserva (ao mês):", 'compare-consorcio' ); ?></label></th>
                     <td><input name="<?php echo $fieldName; ?>" type="text" id="<?php echo $fieldName; ?>" value="<?php echo $dataField; ?>" class="regular-text" ></td>
                 </tr>
 
