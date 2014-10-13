@@ -3,7 +3,7 @@
 Plugin Name: Criar comparação entre consorcios e financiamentos
 Plugin URI: http://midiadeimpacto.com.br/
 Description: Plugin para criação de uma comparação entre consórcios e financiamentos
-Version: 1.0
+Version: 1.1
 Author: Leandro Lugaresi
 Author URI: http://www.leandrolugaresi.com.br/
 License: GPLv2
@@ -17,6 +17,7 @@ define( 'COMPARE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'COMPARE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 register_activation_hook( __FILE__, 'compare_plugin_activation' );
+register_deactivation_hook( __FILE__, 'compare_plugin_deactivation' );
 
 function compare_plugin_activation()
 {
@@ -25,69 +26,38 @@ function compare_plugin_activation()
 
     // Acesso ao objeto global de gestão de bases de dados
     global $wpdb;
-
     // Vamos checar se a nova tabela existe
     // A propriedade prefix é o prefixo de tabela escolhido na
     // instalação do WordPress
 
     $tablename = $wpdb->prefix . 'compare_consorcio';
 
-    if ($wpdb->get_var("SHOW TABLES LIKE '$tablename'") != $tablename) {
-        // Se a tabela não existe vamos criá-la
-        $sql = "CREATE TABLE ".$tablename." (
-            id mediumint(9) NsOT NULL AUTO_INCREMENT,
-            nome varchar(150) NOT NULL,
-            email varchar(150) NOT NULL,
-            telefone varchar(40) NULL DEFAULT NULL,
-            valor DECIMAL( 12, 2 ) NOT NULL,
-            prazo varchar(40) NOT NULL,
-            date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-            PRIMARY KEY (id)
-        );";
-        dbDelta( $sql );
-    } else {
-        //updates
-        $columns = $wpdb->get_col( 'DESC '. $tablename, 0);
+    //create or update
+    $sql = "CREATE TABLE $tablename (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        nome varchar(150) NOT NULL,
+        email varchar(150) NOT NULL,
+        telefone varchar(50) NULL DEFAULT NULL,
+        valor DECIMAL( 12, 2 ) NOT NULL,
+        prazo varchar(40) NOT NULL,
+        date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+        PRIMARY KEY  (id)
+    );";
 
-        if (!in_array('email', $columns)) {
-            $sql = "ALTER TABLE  `".$tablename."` ADD  `email` VARCHAR( 150 ) NULL DEFAULT NULL AFTER  `nome` ;";
-            dbDelta( $sql );
-        }
-
-        if (!in_array('telefone', $columns)) {
-            $sql = "ALTER TABLE  `".$tablename."` ADD  `telefone` VARCHAR( 40 ) NULL DEFAULT NULL AFTER  `email` ;";
-            dbDelta( $sql );
-        }
-
-    }
+    dbDelta( $sql );
 
 }
-
-register_deactivation_hook( __FILE__, 'compare_plugin_deactivation' );
 
 function compare_plugin_deactivation()
 {
     // Vamos remover a tabela na desinstalação do plugin
     global $wpdb;
 
-    // Para usarmos a função dbDelta() é necessário carregar este ficheiro
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
-    // Vamos checar se a nova tabela existe
-    // A propriedade prefix é o prefixo de tabela escolhido na
-    // instalação do WordPress
-    $tablename = $wpdb->prefix . 'compare_consorcio';
-    if ( $wpdb->get_var( "SHOW TABLES LIKE '$tablename'" ) == $tablename ) {
-
-        $count = $wpdb->get_results('SELECT count(*) as count FROM '. $tablename. ';');
-        if ($count[0]->count == 0) {
-            $sql = "DROP TABLE $tablename;";
-
-            // Esta função cria a tabela na base de dados e executa as otimizações
-            // necessárias.
-            dbDelta( $sql );
-        }
-
+    $table_name = $wpdb->prefix . "compare_consorcio";
+    $count = $wpdb->get_results('SELECT count(*) as count FROM '. $table_name. ';');
+    if ($count[0]->count == 0) {
+        $sql = "DROP TABLE IF EXISTS $table_name;";
+        $wpdb->query($sql);
     }
 }
 
