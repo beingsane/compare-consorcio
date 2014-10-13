@@ -38,6 +38,7 @@ function compare_plugin_activation()
             id mediumint(9) NsOT NULL AUTO_INCREMENT,
             nome varchar(150) NOT NULL,
             email varchar(150) NOT NULL,
+            telefone varchar(40) NULL DEFAULT NULL,
             valor DECIMAL( 12, 2 ) NOT NULL,
             prazo varchar(40) NOT NULL,
             date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
@@ -69,19 +70,18 @@ function compare_plugin_deactivation()
     // Vamos remover a tabela na desinstalação do plugin
     global $wpdb;
 
+    // Para usarmos a função dbDelta() é necessário carregar este ficheiro
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
     // Vamos checar se a nova tabela existe
     // A propriedade prefix é o prefixo de tabela escolhido na
     // instalação do WordPress
     $tablename = $wpdb->prefix . 'compare_consorcio';
-    if ( $wpdb->get_var( "SHOW TABLES LIKE '$tablename'" ) != $tablename ) {
+    if ( $wpdb->get_var( "SHOW TABLES LIKE '$tablename'" ) == $tablename ) {
 
-        $count = $wpdb->get_results('SELECT count(*) FROM '. $tablename. ';');
-
-        if ($count['count'] == 0) {
+        $count = $wpdb->get_results('SELECT count(*) as count FROM '. $tablename. ';');
+        if ($count[0]->count == 0) {
             $sql = "DROP TABLE $tablename;";
-
-            // Para usarmos a função dbDelta() é necessário carregar este ficheiro
-            require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
             // Esta função cria a tabela na base de dados e executa as otimizações
             // necessárias.
