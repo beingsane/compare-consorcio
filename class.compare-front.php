@@ -21,7 +21,8 @@ class Compare_Front
     public static function my_scripts()
     {
         wp_enqueue_script( 'my-compare-maskMoney', plugins_url( 'assets/jquery.maskMoney.min.js', __FILE__ ), array( 'jquery' ), '1.0.0', true );
-        wp_enqueue_script( 'my-compare-script', plugins_url( 'assets/compare.js', __FILE__ ), array( 'jquery', 'my-compare-maskMoney' ), '1.0.0', true );
+        wp_enqueue_script( 'my-compare-maskedinput', plugins_url( 'assets/jquery.maskedinput.min.js', __FILE__ ), array( 'jquery' ), '1.0.0', true );
+        wp_enqueue_script( 'my-compare-script', plugins_url( 'assets/compare.js', __FILE__ ), array( 'jquery', 'my-compare-maskMoney', 'my-compare-maskedinput' ), '1.0.0', true );
     }
 
     public static function shortcode_form($attrs)
@@ -31,7 +32,6 @@ class Compare_Front
         ), $attrs ) );
 
         ob_start();
-        //self::deliver_mail();
         self::html_form_code();
 
         return ob_get_clean();
@@ -57,6 +57,9 @@ class Compare_Front
             }
             if (empty($_POST['comp-prazo'])) {
                 $invalid['comp-prazo'] = 'Por favor preencha este campo obrigatório.';
+            }
+            if (empty($_POST['comp-telefone'])) {
+                $invalid['comp-telefone'] = 'Por favor preencha este campo obrigatório.';
             }
             if (!empty($_POST['comp-email']) && !is_email($_POST['comp-email'])) {
                 $invalid['comp-email'] = 'Por favor preencha com um e-mail valido.';
@@ -97,6 +100,7 @@ class Compare_Front
                     'valor' => $valor,
                     'nome' => $post['comp-name'],
                     'email' => $post['comp-email'],
+                    'telefone' => $post['comp-telefone'],
                     'prazo' => $post['comp-prazo'],
                     'date' => current_time( 'mysql' ),
                 ) );
@@ -186,32 +190,5 @@ class Compare_Front
             'valor' => $valor,
             'meses' => $meses
         );
-    }
-
-    public static function deliver_mail()
-    {
-        // if the submit button is clicked, send the email
-        if ( isset( $_POST['cf-submitted'] ) ) {
-
-            // sanitize form values
-            $name    = sanitize_text_field( $_POST["cf-name"] );
-            $email   = sanitize_email( $_POST["cf-email"] );
-            $subject = sanitize_text_field( $_POST["cf-subject"] );
-            $message = esc_textarea( $_POST["cf-message"] );
-
-            // get the blog administrator's email address
-            $to = get_option( 'admin_email' );
-
-            $headers = "From: $name <$email>" . "\r\n";
-
-            // If email has been process for sending, display a success message
-            if ( wp_mail( $to, $subject, $message, $headers ) ) {
-                echo '<div>';
-                echo '<p>Thanks for contacting me, expect a response soon.</p>';
-                echo '</div>';
-            } else {
-                echo 'An unexpected error occurred';
-            }
-        }
     }
 }

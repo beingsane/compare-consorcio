@@ -20,6 +20,9 @@ register_activation_hook( __FILE__, 'compare_plugin_activation' );
 
 function compare_plugin_activation()
 {
+    // Para usarmos a função dbDelta() é necessário carregar este ficheiro
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
     // Acesso ao objeto global de gestão de bases de dados
     global $wpdb;
 
@@ -29,22 +32,33 @@ function compare_plugin_activation()
 
     $tablename = $wpdb->prefix . 'compare_consorcio';
 
-    // Se a tabela não existe vamos criá-la
-    $sql = "CREATE TABLE ".$tablename." (
-        id mediumint(9) NOT NULL AUTO_INCREMENT,
-        nome varchar(150) NOT NULL,
-        email varchar(150) NOT NULL,
-        valor DECIMAL( 12, 2 ) NOT NULL,
-        prazo varchar(40) NOT NULL,
-        date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-        PRIMARY KEY (id)
-    );";
-    // Para usarmos a função dbDelta() é necessário carregar este ficheiro
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    if ($wpdb->get_var("SHOW TABLES LIKE '$tablename'") != $tablename) {
+        // Se a tabela não existe vamos criá-la
+        $sql = "CREATE TABLE ".$tablename." (
+            id mediumint(9) NsOT NULL AUTO_INCREMENT,
+            nome varchar(150) NOT NULL,
+            email varchar(150) NOT NULL,
+            valor DECIMAL( 12, 2 ) NOT NULL,
+            prazo varchar(40) NOT NULL,
+            date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+            PRIMARY KEY (id)
+        );";
+        dbDelta( $sql );
+    } else {
+        //updates
+        $columns = $wpdb->get_col( 'DESC '. $tablename, 0);
 
-    // Esta função cria a tabela na base de dados e executa as otimizações
-    // necessárias.
-    dbDelta( $sql );
+        if (!in_array('email', $columns)) {
+            $sql = "ALTER TABLE  `".$tablename."` ADD  `email` VARCHAR( 150 ) NULL DEFAULT NULL AFTER  `nome` ;";
+            dbDelta( $sql );
+        }
+
+        if (!in_array('telefone', $columns)) {
+            $sql = "ALTER TABLE  `".$tablename."` ADD  `telefone` VARCHAR( 40 ) NULL DEFAULT NULL AFTER  `email` ;";
+            dbDelta( $sql );
+        }
+
+    }
 
 }
 
@@ -59,18 +73,20 @@ function compare_plugin_deactivation()
     // A propriedade prefix é o prefixo de tabela escolhido na
     // instalação do WordPress
     $tablename = $wpdb->prefix . 'compare_consorcio';
-
-    // Se a tabela não existe vamos criá-la
     if ( $wpdb->get_var( "SHOW TABLES LIKE '$tablename'" ) != $tablename ) {
 
-        $sql = "DROP TABLE $tablename;";
+        $count = $wpdb->get_results('SELECT count(*) FROM '. $tablename. ';');
 
-        // Para usarmos a função dbDelta() é necessário carregar este ficheiro
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        if ($count['count'] == 0) {
+            $sql = "DROP TABLE $tablename;";
 
-        // Esta função cria a tabela na base de dados e executa as otimizações
-        // necessárias.
-        dbDelta( $sql );
+            // Para usarmos a função dbDelta() é necessário carregar este ficheiro
+            require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+            // Esta função cria a tabela na base de dados e executa as otimizações
+            // necessárias.
+            dbDelta( $sql );
+        }
 
     }
 }

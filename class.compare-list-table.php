@@ -15,7 +15,7 @@ class Compare_List_Table extends WP_List_Table
         setlocale(LC_MONETARY, 'pt_BR');
         parent::__construct( array(
             'singular'=> 'registro', //Singular label
-            'plural' => 'registro', //plural label, also this well be one of the table css class
+            'plural' => 'registros', //plural label, also this well be one of the table css class
             'ajax'   => false //We won't support Ajax for this table
         ) );
     }
@@ -46,6 +46,7 @@ class Compare_List_Table extends WP_List_Table
         switch ($column_name) {
             case 'nome':
             case 'email':
+            case 'telefone':
             case 'valor':
             case 'prazo':
             case 'date':
@@ -66,6 +67,7 @@ class Compare_List_Table extends WP_List_Table
             'cb'=> '<input type="checkbox" />',
             'nome'=>__('Nome'),
             'email'=>__('Email'),
+            'telefone'=>__('Telefone'),
             'valor'=>__('Valor'),
             'prazo'=>__('Prazo'),
             'date'=>__('Data'),
@@ -79,8 +81,9 @@ class Compare_List_Table extends WP_List_Table
     public function get_sortable_columns()
     {
         $sortable_columns = array(
-            'nome'     => array('nome',true),     //true means it's already sorted
+            'nome'     => array('nome',false),     //true means it's already sorted
             'email'     => array('email',false),     //true means it's already sorted
+            'telefone'     => array('telefone',false),     //true means it's already sorted
             'valor'     => array('valor',false),     //true means it's already sorted
             'prazo'    => array('prazo',false),
             'date'  => array('date',false)
@@ -216,6 +219,8 @@ class Compare_List_Table extends WP_List_Table
 
         if (!empty($orderby) && !empty($order)) {
             $query .= ' ORDER BY '.$orderby. ' '. $order;
+        } else {
+            $query .= ' ORDER BY id DESC';
         }
 
         /* -- Pagination parameters -- */

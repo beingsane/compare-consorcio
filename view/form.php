@@ -19,6 +19,15 @@
             </span>
         </p>
         <p>
+            Telefone (Obrigatório)<br>
+            <span class="wpcf7-form-control-wrap">
+                <input type="text" id="compare-telefone" name="comp-telefone" value="<?php echo isset( $_POST["comp-telefone"] ) ? esc_attr( $_POST["comp-telefone"] ) : ''; ?>" class="wpcf7-form-control wpcf7-text wpcf7-telefone wpcf7-validates-as-required wpcf7-validates-as-telefone" aria-required="true">
+                <?php if (array_key_exists('comp-telefone', $invalid)): ?>
+                    <span role="alert" class="wpcf7-not-valid-tip"><?php echo $invalid['comp-telefone'] ?></span>
+                <?php endif ?>
+            </span>
+        </p>
+        <p>
             Valor<br>
             <span class="wpcf7-form-control-wrap">
                 <input type="text" id="compare-valor" name="comp-valor" value="<?php echo isset( $_POST["comp-valor"] ) ? esc_attr( $_POST["comp-valor"] ) : ''; ?>" size="40" class="wpcf7-form-control wpcf7-text" aria-invalid="false">

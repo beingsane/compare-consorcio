@@ -59,6 +59,7 @@ class Compare_Admin
             fputcsv($fh, array(
                 'Nome',
                 'E-mail',
+                'Telefone',
                 'Valor',
                 'Prazo (meses)',
                 'Data'
@@ -67,6 +68,7 @@ class Compare_Admin
                 $data = array(
                     $result->nome,
                     $result->email,
+                    $result->telefone,
                     $result->valor,
                     $result->prazo,
                     $result->date,
